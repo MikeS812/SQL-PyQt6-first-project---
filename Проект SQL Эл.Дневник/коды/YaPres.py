@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('YandexPres.ui', self)
+
         self.run()
         self.theme()
         self.SetBtn.clicked.connect(self.sets)
@@ -22,10 +23,12 @@ class MainWindow(QMainWindow):
         self.zachBtn.clicked.connect(self.dobav)
         self.rBtn.clicked.connect(self.open_file)
 
+    # открытие файла с рекомендацией
     def open_file(self):
         self.text_viewer = FileOpen()
         self.text_viewer.show()
 
+    # добавление учеников с базу
     def addfunc(self):
         result2 = self.cursor.execute("SELECT * FROM Ученики").fetchall()
 
@@ -57,9 +60,11 @@ class MainWindow(QMainWindow):
                 course_int = int(course)
                 if True == 1 <= course_int <= 4:
                     pass
+
                 else:
                     QMessageBox.warning(self, "Ошибка", "Курс должен быть в диапазоне 1-4")
                     return
+
             except ValueError:
                 QMessageBox.warning(self, "Ошибка", "Курс должен быть числом!")
                 return
@@ -73,6 +78,7 @@ class MainWindow(QMainWindow):
                 INSERT INTO Ученики (ID, "Ф.И.О", Номер, Факультет, Курс)
                 VALUES ('{len(result2) + 1}', '{fio}', '{number}', 'Механика', '{course_int}')
             ''')
+
             for i in range(1, 4):
                 self.cursor.execute(f'''
                                 INSERT INTO [{i}Триместр] (ID, [Ф.И.О],Номер)
@@ -87,6 +93,7 @@ class MainWindow(QMainWindow):
         except Exception:
             QMessageBox.critical(self, "Ошибка", f"Упс, попробуйте еще раз")
 
+    # удаление учеников из базы
     def delfunc(self):
         try:
             del_x = self.comboBox.currentText()
@@ -110,6 +117,7 @@ class MainWindow(QMainWindow):
         except Exception:
             QMessageBox.critical(self, "Ошибка", f"Упс, попробуйте еще раз")
 
+        # Проверка комбо бокса
         if del_x == "Ф.И.О":
             sp = self.cursor.execute(f"SELECT [Ф.И.О] FROM Ученики WHERE [Ф.И.О] = '{str(del_l)}'").fetchall()
             if len(sp) > 1:
@@ -137,6 +145,7 @@ class MainWindow(QMainWindow):
         self.prichLine.clear()
         self.run()
 
+    # выход из программы
     def off1(self):
         r = QMessageBox.question(self, "Предупреждение",
                                  "Уверены что хотите закрыть программу?",
@@ -145,47 +154,62 @@ class MainWindow(QMainWindow):
         if r == QMessageBox.StandardButton.Ok:
             exit(0)
 
+    # Очистка полей
     def clear(self):
         self.fio.clear()
         self.nymber.clear()
         self.course.clear()
 
+    # подключение базы
     def run(self):
         self.conn = sqlite3.connect("Teen_db.sqlite")
         self.cursor = self.conn.cursor()
+
+        # журнал
 
         result = self.cursor.execute("SELECT * FROM Ученики").fetchall()
         self.tableWidget.setRowCount(len(result))
         self.tableWidget.setColumnCount(len(result[0]))
         self.tableWidget.setHorizontalHeaderLabels(['ID', 'Ф.И.О', 'Номер', 'Факультет', 'Курс'])
+
         for row_num, row_data in enumerate(result):
             for col_num, data in enumerate(row_data):
                 self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(data)))
+
         # 1трим
+
         result = self.cursor.execute("SELECT * FROM [1Триместр]").fetchall()
         self.tableWidget_2.setRowCount(len(result))
         self.tableWidget_2.setColumnCount(len(result[0]))
         self.tableWidget_2.setHorizontalHeaderLabels(['ID', 'Ф.И.О', 'Номер', 'Физика', 'Математика', 'Информатика'])
+
         for row_num, row_data in enumerate(result):
             for col_num, data in enumerate(row_data):
                 self.tableWidget_2.setItem(row_num, col_num, QTableWidgetItem(str(data)))
+
         # 2трим
+
         result = self.cursor.execute("SELECT * FROM [2Триместр]").fetchall()
         self.tableWidget_3.setRowCount(len(result))
         self.tableWidget_3.setColumnCount(len(result[0]))
         self.tableWidget_3.setHorizontalHeaderLabels(['ID', 'Ф.И.О', 'Номер', 'Физика', 'Математика', 'Информатика'])
+
         for row_num, row_data in enumerate(result):
             for col_num, data in enumerate(row_data):
                 self.tableWidget_3.setItem(row_num, col_num, QTableWidgetItem(str(data)))
+
         # 3трим
+
         result = self.cursor.execute("SELECT * FROM [3Триместр]").fetchall()
         self.tableWidget_4.setRowCount(len(result))
         self.tableWidget_4.setColumnCount(len(result[0]))
         self.tableWidget_4.setHorizontalHeaderLabels(['ID', 'Ф.И.О', 'Номер', 'Физика', 'Математика', 'Информатика'])
+
         for row_num, row_data in enumerate(result):
             for col_num, data in enumerate(row_data):
                 self.tableWidget_4.setItem(row_num, col_num, QTableWidgetItem(str(data)))
 
+    # выставление зачетов
     def dobav(self):
         v_l = self.comboBox_2.currentText()
         v_trim = self.comboBox_3.currentText()
@@ -206,6 +230,7 @@ class MainWindow(QMainWindow):
                 if not v_index:
                     QMessageBox.information(self, "Подтверждение", "Вы не ввели Номер.")
                     return
+
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Упс, попробуйте еще раз {str(e)}")
             return
@@ -229,7 +254,9 @@ class MainWindow(QMainWindow):
         self.clear()
         self.run()
 
+    # тема по умолчанию
     def theme(self):
+        # Темная
         self.tema = """
                         QMainWindow, QWidget {
                             background-color: #2b2b2b;
@@ -276,8 +303,10 @@ class MainWindow(QMainWindow):
                             border-bottom: none;
                         }
                         """
+
         self.setStyleSheet(self.tema)
 
+    # вызов функии настроек
     def sets(self):
         self.sett = Set(mn=self)
         self.sett.show()
