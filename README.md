@@ -3,6 +3,7 @@ My first project on yandex.
 Как запустить код:
 Откройте PyCharm или другие IDE
 убедитесь что в директории рядом с 3 файлами классов лежат YandexPres.ui, YandexTool.ui, Teen_db.sqlite, recomend.txt
+при открытие exe файла данные файлы также должны лежать в директроии рядом.
 Установите зависимости из файла requirements.txt
 Запустите программу 
 
