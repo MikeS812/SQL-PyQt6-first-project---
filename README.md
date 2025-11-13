@@ -1,5 +1,7 @@
 # SQL-PyQt6-first-project---
-My first project on yandex.
+
+Мой первый проект!
+
 Как запустить код:
 Откройте PyCharm или другие IDE
 убедитесь что в директории рядом с 3 файлами классов лежат YandexPres.ui, YandexTool.ui, Teen_db.sqlite, recomend.txt
