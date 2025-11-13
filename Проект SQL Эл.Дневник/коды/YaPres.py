@@ -4,6 +4,7 @@ import sys
 import fnmatch
 
 from PyQt6 import uic
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox
 from FileLoader import FileOpen
 from Settings import Set
@@ -13,7 +14,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('YandexPres.ui', self)
-
+        self.foto()
         self.run()
         self.theme()
         self.SetBtn.clicked.connect(self.sets)
@@ -119,12 +120,15 @@ class MainWindow(QMainWindow):
 
         # Проверка комбо бокса
         if del_x == "Ф.И.О":
-            sp = self.cursor.execute(f"SELECT [Ф.И.О] FROM Ученики WHERE [Ф.И.О] = '{str(del_l)}'").fetchall()
+            sp = self.cursor.execute(f"""SELECT [Ф.И.О] FROM Ученики 
+            WHERE [Ф.И.О] = '{str(del_l)}'""").fetchall()
+
             if len(sp) > 1:
                 QMessageBox.warning(self, "Ошибка", "Учеников с такими инициалами несколько удалите ученика по номеру")
                 return
             self.cursor.execute(f"""DELETE FROM Ученики
                        WHERE "Ф.И.О" = '{del_l}'""")
+
             for i in range(1, 4):
                 self.cursor.execute(f"""DELETE FROM [{i}Триместр]
                        WHERE "Ф.И.О" = '{del_l}'""")
@@ -137,6 +141,7 @@ class MainWindow(QMainWindow):
 
         if self.cursor.rowcount != 0:
             QMessageBox.information(self, "Успех", "Ученик удален!")
+
         else:
             QMessageBox.warning(self, "Ошибка", "Ученик не найден!")
 
@@ -154,6 +159,11 @@ class MainWindow(QMainWindow):
         if r == QMessageBox.StandardButton.Ok:
             exit(0)
 
+    # фотка
+    def foto(self):
+        self.SetBtn.setText("")
+        self.SetBtn.setIcon(QIcon("hest4.png"))
+
     # Очистка полей
     def clear(self):
         self.fio.clear()
@@ -162,6 +172,7 @@ class MainWindow(QMainWindow):
 
     # подключение базы
     def run(self):
+        # база
         self.conn = sqlite3.connect("Teen_db.sqlite")
         self.cursor = self.conn.cursor()
 
@@ -222,6 +233,7 @@ class MainWindow(QMainWindow):
 
         try:
             v_index = self.indexLine.text()
+
             if v_l == "Ф.И.О":
                 if not v_index:
                     QMessageBox.information(self, "Подтверждение", "Вы не ввели Ф.И.О.")
@@ -235,18 +247,25 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Ошибка", f"Упс, попробуйте еще раз {str(e)}")
             return
 
-        sp = self.cursor.execute(f"SELECT [Ф.И.О] FROM Ученики WHERE [Ф.И.О] = '{str(v_index)}'").fetchall()
+        sp = self.cursor.execute(f"""SELECT [Ф.И.О] FROM Ученики 
+        WHERE [Ф.И.О] = '{str(v_index)}'""").fetchall()
         if len(sp) > 1:
             QMessageBox.warning(self, "Ошибка", "Учеников с такими инициалами несколько. Выставте зачет по номеру")
             return
 
         if v_l == "Ф.И.О":
-            self.cursor.execute(f'''UPDATE [{v_trim}Триместр] SET {v_pred} = '{v_z}' WHERE [Ф.И.О] = '{v_index}' ''')
+            self.cursor.execute(f'''UPDATE [{v_trim}Триместр] 
+            SET {v_pred} = '{v_z}' 
+            WHERE [Ф.И.О] = '{v_index}' ''')
+
         else:
-            self.cursor.execute(f'''UPDATE [{v_trim}Триместр] SET {v_pred} = '{v_z}' WHERE Номер = '{v_index}' ''')
+            self.cursor.execute(f'''UPDATE [{v_trim}Триместр] 
+            SET {v_pred} = '{v_z}' 
+            WHERE Номер = '{v_index}' ''')
 
         if self.cursor.rowcount != 0:
             QMessageBox.information(self, "Успех", "Зачет выставлен!")
+
         else:
             QMessageBox.warning(self, "Ошибка", "Ученик не найден!")
 
@@ -262,6 +281,7 @@ class MainWindow(QMainWindow):
                             background-color: #2b2b2b;
                             color: white;
                         }
+                        
                         QPushButton {
                             background-color: #404040;
                             color: white;

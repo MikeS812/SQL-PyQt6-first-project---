@@ -1,17 +1,34 @@
 import sys
 
-from PyQt6.QtWidgets import QWidget, QApplication
+from PyQt6.QtWidgets import QWidget, QApplication, QMessageBox
 from PyQt6 import uic
 from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtCore import QUrl
 
 class Set(QWidget):
-    def __init__(self, mn=None):
+    def __init__(self, mn=None, f=True):
         super().__init__()
         uic.loadUi('YandexTool.ui', self)
+
         self.mn = mn
         self.pushButton_4.clicked.connect(self.theme2)
+        # востонавление
         self.vostBtn.clicked.connect(self.vostFunc)
+        self.pushButton.clicked.connect(self.sbross)
+
+    def sbross(self):
+        try:
+            reply = QMessageBox.question(self, "Сброс",
+                                         "Сбросить все настройки?",
+                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
+                self.mn.setStyleSheet(self.tema)
+
+                QMessageBox.information(self, "Успех", "Настройки сброшены")
+            else:
+                QMessageBox.information(self, "Отмена", "Отмена")
+        except Exception:
+            QMessageBox.information(self, "Успех", "Настройки не изменялись")
 
     def theme2(self):
         self.tema = """
@@ -34,6 +51,7 @@ class Set(QWidget):
                     border: 1px solid #555;
                     padding: 5px;
                 }
+                
                 QTableWidget {
                     background-color: #2b2b2b;
                     color: white;
@@ -60,10 +78,13 @@ class Set(QWidget):
                     border-bottom: none;
                 }
                 """
+
         if not self.radioButton_2.isChecked() and not self.radioButton_3.isChecked():
             self.mn.setStyleSheet(self.tema)
+
         if self.radioButton_2.isChecked():
             self.mn.setStyleSheet(self.tema)
+
         if self.radioButton_3.isChecked():
             self.mn.setStyleSheet("""
                     QMainWindow, QWidget {
@@ -111,6 +132,7 @@ class Set(QWidget):
                         border-bottom: none;
                     }
                 """)
+
     def vostFunc(self):
         QDesktopServices.openUrl(QUrl("https://disk.yandex.ru/d/hxMiiP0WLoAMjQ"))
 
