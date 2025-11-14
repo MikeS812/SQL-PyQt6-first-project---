@@ -15,6 +15,60 @@ class Set(QWidget):
         # востонавление
         self.vostBtn.clicked.connect(self.vostFunc)
         self.pushButton.clicked.connect(self.sbross)
+        self.primBtn.clicked.connect(self.frntSize)
+
+        self.tema = """
+                        QMainWindow, QWidget {
+                            background-color: #2b2b2b;
+                            color: white;
+                        }
+                        QPushButton {
+                            background-color: #404040;
+                            color: white;
+                            border: 1px solid #555;
+                            padding: 5px;
+                        }
+                        QPushButton:hover {
+                            background-color: #505050;
+                        }
+                        QLineEdit, QComboBox {
+                            background-color: #404040;
+                            color: white;
+                            border: 1px solid #555;
+                            padding: 5px;
+                        }
+
+                        QTableWidget {
+                            background-color: #2b2b2b;
+                            color: white;
+                            gridline-color: #555;
+                        }
+                        QHeaderView::section {
+                            background-color: #404040;
+                            color: white;
+                            padding: 5px;
+                            border: 1px solid #555;
+                        }
+                        QTabWidget::pane {
+                            border: 1px solid #555;
+                            background-color: #2b2b2b;
+                        }
+                        QTabBar::tab {
+                            background-color: #404040;
+                            color: white;
+                            padding: 8px 16px;
+                            border: 1px solid #555;
+                        }
+                        QTabBar::tab:selected {
+                            background-color: #2b2b2b;
+                            border-bottom: none;
+                        }
+                        """
+
+    def frntSize(self):
+        size = self.fontSize.value()
+        new_style = f"font-size: {size}px;"
+        self.mn.setStyleSheet(self.mn.styleSheet() + f"QWidget{{ {new_style} }}")
 
     def sbross(self):
         try:
@@ -23,7 +77,7 @@ class Set(QWidget):
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if reply == QMessageBox.StandardButton.Yes:
                 self.mn.setStyleSheet(self.tema)
-
+                self.fontSize.setValue(12)
                 QMessageBox.information(self, "Успех", "Настройки сброшены")
             else:
                 QMessageBox.information(self, "Отмена", "Отмена")
@@ -31,53 +85,7 @@ class Set(QWidget):
             QMessageBox.information(self, "Успех", "Настройки не изменялись")
 
     def theme2(self):
-        self.tema = """
-                QMainWindow, QWidget {
-                    background-color: #2b2b2b;
-                    color: white;
-                }
-                QPushButton {
-                    background-color: #404040;
-                    color: white;
-                    border: 1px solid #555;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #505050;
-                }
-                QLineEdit, QComboBox {
-                    background-color: #404040;
-                    color: white;
-                    border: 1px solid #555;
-                    padding: 5px;
-                }
-                
-                QTableWidget {
-                    background-color: #2b2b2b;
-                    color: white;
-                    gridline-color: #555;
-                }
-                QHeaderView::section {
-                    background-color: #404040;
-                    color: white;
-                    padding: 5px;
-                    border: 1px solid #555;
-                }
-                QTabWidget::pane {
-                    border: 1px solid #555;
-                    background-color: #2b2b2b;
-                }
-                QTabBar::tab {
-                    background-color: #404040;
-                    color: white;
-                    padding: 8px 16px;
-                    border: 1px solid #555;
-                }
-                QTabBar::tab:selected {
-                    background-color: #2b2b2b;
-                    border-bottom: none;
-                }
-                """
+
 
         if not self.radioButton_2.isChecked() and not self.radioButton_3.isChecked():
             self.mn.setStyleSheet(self.tema)
