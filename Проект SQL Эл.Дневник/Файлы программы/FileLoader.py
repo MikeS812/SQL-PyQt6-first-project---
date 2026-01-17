@@ -14,6 +14,7 @@ class FileOpen(QWidget):
         self.load_file()
 
     def load_file(self):
+        # нужно для запуска подсказки
         with open("recomend.txt", 'r', encoding='utf-8') as f:
             content = f.read()
             self.text_edit.setText(content)
