@@ -12,6 +12,7 @@ class FileOpen(QWidget):
         layout.addWidget(self.text_edit)
         self.setLayout(layout)
         self.load_file()
+        # вызов функ
 
     def load_file(self):
         # нужно для запуска подсказки
